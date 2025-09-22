@@ -1,0 +1,109 @@
+while not False:
+    try:
+        print("1 - калькулятор \n2 - сравнение чисел\n3 - Побитовые операции\n0 - выход ")
+        dest = input()
+        
+        if dest != '1' and dest != '2' and dest != '3' and dest != '0':
+            print("Выберете действвие из предложенных выше!")
+
+        elif dest == "1":
+            znaks = ["+", "-", "/", "//", "%", "**"]
+
+            while True:
+                znak = input("Введите знак (+, -, *, / - целочисленное деление, // - деление с остатком, % - остаток от деления, ** - возведение в степень) ")
+
+                if znak in znaks:
+
+                    num1 = int(input('Введите первое число: '))
+                    num2 = int(input('Введите второе число: '))
+
+                    sum = 0
+
+                    if znak == "+":
+                        sum = num1 + num2
+
+                    elif znak == "-":
+                        sum = num1 - num2
+
+                    elif znak == "*":
+                        sum = num1 * num2
+
+                    elif znak == "/":
+                        if num2 != 0:
+                            sum = num1 / num2
+                        else:
+                            sum = "На 0 делить нельзя"
+
+                    elif znak == "//":
+                        if num2 != 0:
+                            sum = num1 // num2
+                        else:
+                            sum = "На 0 делить нельзя"
+                    
+                    elif znak == "%":
+                        if num2 != 0:
+                            sum = num1 % num2
+                        else:
+                            sum = "На 0 делить нельзя"
+
+                    elif znak == "**":
+                        sum = num1 ** num2
+
+                    print(' ')
+                    print(sum)
+                    print(' ')
+
+                    break
+
+                elif znak not in znaks:
+                    print("Введите знак из вышеперечисленных")
+
+        elif dest == "2":
+            print("Проверка двух чисел на == Равно, != Не равно, > Больше, < Меньше, >= Больше или равно, <= Меньше или равно")
+            num1 = int(input('Введите первое число: '))
+            num2 = int(input('Введите второе число: '))
+            print(' ')
+            
+            if num1 is num2:
+                print("Числа равны")
+            if num1 is not num2:
+                print("Числа неравны")
+            if num1 > num2:
+                print("Первое число больше второго")
+            if num1 < num2:
+                print("Первое число меньше второго")
+            if num1 >= num2:
+                print("Первое число больше или равно второму")
+            if num1 <= num2:
+                print("Первое число меньше или равно второму")
+
+        elif dest == '3':
+            while True:
+                pob = input("Введите побитовый оператор (&, |, ^, ~, <<, >>): ")
+                if pob == '~':
+                    a = int(input("Введите целое число: "))
+                    print(~a)
+                elif pob == '&' or pob == '|' or pob == '^' or pob == '<<' or pob == '>>':
+                    a = int(input("Введите первое целое число: "))
+                    b = int(input("Введите второе целое число: "))
+                    if pob == '&':
+                        print(a & b)
+                    elif pob == '|':
+                        print(a | b)
+                    elif pob == '^':
+                        print(a ^ b)
+                    elif pob == '<<':
+                        print(a << b)
+                    elif pob == '>>':
+                        print(a >> b)
+                    break
+                else:
+                    print("Неверный оператор")
+
+        elif dest == "0":
+            print(' ')
+            print("До свидания!")
+            break
+    except:
+        print('Произошла ошибка')
+объясни код
