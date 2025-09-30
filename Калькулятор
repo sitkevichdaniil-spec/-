@@ -106,4 +106,4 @@ while not False:
             break
     except:
         print('Произошла ошибка')
-объясни код
+
