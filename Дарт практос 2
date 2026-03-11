@@ -1,0 +1,269 @@
+import 'dart:io';
+
+void main() {
+  final List<Map<String, dynamic>> students = [
+    {
+      'name': 'Иванов Иван',
+      'grades': {
+        'Математика': 5,
+        'Физика': 4,
+        'Информатика': 5,
+        'История': 3,
+        'Литература': 4,
+      },
+    },
+    {
+      'name': 'Петрова Анна',
+      'grades': {
+        'Математика': 4,
+        'Физика': 5,
+        'Информатика': 5,
+        'История': 5,
+        'Литература': 5,
+      },
+    },
+    {
+      'name': 'Сидоров Петр',
+      'grades': {
+        'Математика': 3,
+        'Физика': 3,
+        'Информатика': 4,
+        'История': 3,
+        'Литература': 3,
+      },
+    },
+    {
+      'name': 'Козлова Елена',
+      'grades': {
+        'Математика': 5,
+        'Физика': 5,
+        'Информатика': 4,
+        'История': 4,
+        'Литература': 5,
+      },
+    },
+    {
+      'name': 'Николаев Дмитрий',
+      'grades': {
+        'Математика': 2,
+        'Физика': 3,
+        'Информатика': 3,
+        'История': 4,
+        'Литература': 3,
+      },
+    },
+    {
+      'name': 'Морозова Ольга',
+      'grades': {
+        'Математика': 5,
+        'Физика': 5,
+        'Информатика': 5,
+        'История': 5,
+        'Литература': 5,
+      },
+    },
+  ];
+
+  // --- Список всех предметов (без повторов) ---
+  Set<String> subjectsSet = {};
+  for (var student in students) {
+    subjectsSet.addAll(student['grades'].keys);
+  }
+  List<String> subjects = subjectsSet.toList()..sort();
+
+  // --- Функция для среднего балла студента ---
+  double studentAvg(Map<String, int> grades) {
+    int sum = 0, count = 0;
+    for (var grade in grades.values) {
+      sum += grade;
+      count++;
+    }
+    return count == 0 ? 0 : sum / count;
+  }
+
+  // --- 1. Сводная таблица ---
+  print('=== Сводная таблица успеваемости ===');
+  String header = 'Студент'.padRight(20);
+  for (var sub in subjects) header += sub.padLeft(12);
+  header += 'Ср.балл'.padLeft(12);
+  print(header);
+
+  for (var student in students) {
+    String row = student['name'].padRight(20);
+    Map<String, int> grades = student['grades'];
+    for (var sub in subjects) {
+      if (grades.containsKey(sub)) {
+        row += grades[sub].toString().padLeft(12);
+      } else {
+        row += '-'.padLeft(12);
+      }
+    }
+    row += studentAvg(grades).toStringAsFixed(2).padLeft(12);
+    print(row);
+  }
+
+  String footer = 'Ср. по предм.'.padRight(20);
+  for (var sub in subjects) {
+    int sum = 0, count = 0;
+    for (var student in students) {
+      Map<String, int> grades = student['grades'];
+      if (grades.containsKey(sub)) {
+        sum += grades[sub]!;
+        count++;
+      }
+    }
+    double avg = count == 0 ? 0 : sum / count;
+    footer += avg.toStringAsFixed(2).padLeft(12);
+  }
+  footer += ''.padLeft(12);
+  print('$footer\n');
+
+  // --- 2. Поиск студента ---
+  const searchName = 'Петрова Анна';
+  print('=== Поиск студента "$searchName" ===');
+  Map<String, dynamic>? found;
+  for (var student in students) {
+    if (student['name'] == searchName) {
+      found = student;
+      break;
+    }
+  }
+
+  if (found == null) {
+    print('Студент не найден');
+  } else {
+    Map<String, int> grades = found['grades'];
+    print('Оценки:');
+    for (var sub in subjects) {
+      if (grades.containsKey(sub)) {
+        print('  $sub: ${grades[sub]}');
+      } else {
+        print('  $sub: -');
+      }
+    }
+    double avg = studentAvg(grades);
+    print('Средний балл: ${avg.toStringAsFixed(2)}');
+    if (avg >= 4.5) {
+      print('Категория: отличник');
+    } else if (avg >= 3.5) {
+      print('Категория: хорошист');
+    } else {
+      print('Категория: остальные');
+    }
+  }
+  print('');
+
+  // --- 3. Уникальные оценки ---
+  print('=== Уникальные оценки в журнале ===');
+  Set<int> uniqueGrades = {};
+  for (var student in students) {
+    Map<String, int> grades = student['grades'];
+    for (var grade in grades.values) {
+      uniqueGrades.add(grade);
+    }
+  }
+  List<int> sortedUnique = uniqueGrades.toList()..sort();
+  print(sortedUnique);
+  print('');
+
+  // --- 4. Макс./мин. оценки по предметам ---
+  print('=== Максимальные и минимальные оценки по предметам ===');
+  for (var sub in subjects) {
+    int? max, min;
+    List<String> maxStudents = [], minStudents = [];
+
+    for (var student in students) {
+      Map<String, int> grades = student['grades'];
+      if (!grades.containsKey(sub)) continue;
+
+      int grade = grades[sub]!;
+      if (max == null || grade > max) {
+        max = grade;
+        maxStudents = [student['name']];
+      } else if (grade == max) {
+        maxStudents.add(student['name']);
+      }
+
+      if (min == null || grade < min) {
+        min = grade;
+        minStudents = [student['name']];
+      } else if (grade == min) {
+        minStudents.add(student['name']);
+      }
+    }
+
+    print('Предмет: $sub');
+    print('  Максимальная оценка $max у: ${maxStudents.join(', ')}');
+    print('  Минимальная оценка $min у: ${minStudents.join(', ')}');
+  }
+  print('');
+
+  // --- 5. Студенты с одной двойкой ---
+  print('=== Студенты с ровно одной двойкой ===');
+  bool foundAny = false;
+  for (var student in students) {
+    Map<String, int> grades = student['grades'];
+    int countTwos = 0;
+    String? twoSubject;
+
+    for (var entry in grades.entries) {
+      if (entry.value == 2) {
+        countTwos++;
+        twoSubject = entry.key;
+      }
+    }
+
+    if (countTwos == 1) {
+      foundAny = true;
+      print('${student['name']} - предмет: $twoSubject');
+    }
+  }
+  if (!foundAny) print('Таких студентов нет');
+  print('');
+
+  // --- 6. Предметы выше общего среднего ---
+  print('=== Предметы со средним баллом выше общего среднего по группе ===');
+  int totalSum = 0, totalCount = 0;
+  for (var student in students) {
+    Map<String, int> grades = student['grades'];
+    for (var grade in grades.values) {
+      totalSum += grade;
+      totalCount++;
+    }
+  }
+  double overallAvg = totalSum / totalCount;
+  print('Общий средний балл по группе: ${overallAvg.toStringAsFixed(2)}');
+
+  for (var sub in subjects) {
+    int sum = 0, count = 0;
+    for (var student in students) {
+      Map<String, int> grades = student['grades'];
+      if (grades.containsKey(sub)) {
+        sum += grades[sub]!;
+        count++;
+      }
+    }
+    double avgSub = count == 0 ? 0 : sum / count;
+    if (avgSub > overallAvg) {
+      print('$sub: ${avgSub.toStringAsFixed(2)}');
+    }
+  }
+  print('');
+
+  // --- 7. Количество студентов по категориям ---
+  print('=== Количество студентов по категориям ===');
+  int excellent = 0, good = 0, other = 0;
+  for (var student in students) {
+    double avg = studentAvg(student['grades']);
+    if (avg >= 4.5) {
+      excellent++;
+    } else if (avg >= 3.5) {
+      good++;
+    } else {
+      other++;
+    }
+  }
+  print('Отличники: $excellent');
+  print('Хорошисты: $good');
+  print('Остальные: $other');
+}
