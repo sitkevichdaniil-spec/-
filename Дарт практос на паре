@@ -1,0 +1,83 @@
+//ЗАДАНИЕ 1
+
+String formatName(String firstName, String lastName, [String? middleName]) {
+  if (middleName != null && middleName.isNotEmpty) {
+    return '$lastName $firstName $middleName';
+  }
+  return '$lastName $firstName';
+}
+
+void main() {
+  print(formatName('Иван', 'Петров'));
+  print(formatName('Иван', 'Петров', 'Сидорович'));
+  print(formatName('Иван', 'Петров', ''));
+  print(formatName('Иван', 'Петров', null));
+}
+
+//ЗАДАНИЕ 2
+
+num? calculate(num a, num b, String op) {
+  switch (op) {
+    case '+':
+      return a + b;
+    case '-':
+      return a - b;
+    case '*':
+      return a * b;
+    case '/':
+      if (b == 0) return null;
+      return a / b;
+    default:
+      return null;
+  }
+}
+
+void main1() {
+  print(calculate(10, 5, '+'));
+  print(calculate(10, 5, '-'));
+  print(calculate(10, 5, '*'));
+  print(calculate(10, 5, '/'));
+  print(calculate(10, 0, '/'));
+  print(calculate(10, 5, '%'));
+}
+
+//ЗАДАНИЕ 3
+
+void countSigns(List<int> numbers) {
+  int positive = 0;
+  int negative = 0;
+  int zero = 0;
+
+  for (int num in numbers) {
+    if (num > 0) {
+      positive++;
+    } else if (num < 0) {
+      negative++;
+    } else {
+      zero++;
+    }
+  }
+
+  print('Положительных: $positive, Отрицательных: $negative, Нулевых: $zero');
+}
+
+void main2() {
+  countSigns([5, -3, 0, 12, -8, 0, 7]);
+  countSigns([]);
+}
+
+//ЗАДАНИЕ 4
+
+List<R> transformList<R>(List<int> numbers, R Function(int) transformer) {
+  List<R> result = [];
+  for (int num in numbers) {
+    result.add(transformer(num));
+  }
+  return result;
+}
+
+void main3() {
+  print(transformList([1, 2, 3], (x) => x * 2));
+  print(transformList([5, -1, 0], (x) => 'число $x'));
+  print(transformList([10, -3, 0], (x) => x > 0));
+}
