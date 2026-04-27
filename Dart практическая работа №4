@@ -1,0 +1,160 @@
+// ============================================================
+// 1. Кружка и Человек
+// ============================================================
+class Cup {
+  String liquid;
+  Cup(this.liquid);
+}
+class Person {
+  String name;
+  Person(this.name);
+  void drink(Cup cup) => print('$name пьёт ${cup.liquid} из кружки.');
+}
+
+// ============================================================
+// 2. Шкаф с системами хранения
+// ============================================================
+class Storage {
+  String name;
+  List<String> items = [];
+  Storage(this.name);
+}
+class Wardrobe {
+  List<Storage> sections = [];
+  Wardrobe(List<String> names) {
+    sections = names.map((n) => Storage(n)).toList();
+  }
+  void put(String item, String section) {
+    sections.firstWhere((s) => s.name == section).items.add(item);
+  }
+  bool take(String item, String section) {
+    return sections.firstWhere((s) => s.name == section).items.remove(item);
+  }
+}
+
+// ============================================================
+// 3. Гриф и Блин
+// ============================================================
+class WeightPlate {
+  double weight;
+  WeightPlate(this.weight);
+}
+
+class Barbell {
+  double maxLoad;
+  List<WeightPlate> left = [];
+  List<WeightPlate> right = [];
+  Barbell(this.maxLoad);
+
+  double get totalWeight =>
+      [...left, ...right].fold(0.0, (sum, p) => sum + p.weight);
+
+  bool addPlate(WeightPlate plate, bool isLeft) {
+    if (totalWeight + plate.weight > maxLoad) return false;
+    isLeft ? left.add(plate) : right.add(plate);
+    return true;
+  }
+}
+// ============================================================
+// 4. Конвертер валют
+// ============================================================
+class CurrencyConverter {
+  // курсы относительно базовой валюты
+  Map<String, double> rates;
+  CurrencyConverter(this.rates);
+
+  double convert(double amount, String from, String to) {
+    double inBase = amount / (rates[from] ?? 1);
+    return inBase * (rates[to] ?? 1);
+  }
+}
+// ============================================================
+// 6. Перегрузка базовых арифметических операций
+// ============================================================
+class CustomNumber {
+  int value;
+  CustomNumber(this.value);
+
+  CustomNumber operator +(CustomNumber o) => CustomNumber(value + o.value);
+  CustomNumber operator -(CustomNumber o) => CustomNumber(value - o.value);
+  CustomNumber operator *(CustomNumber o) => CustomNumber(value * o.value);
+  CustomNumber operator /(CustomNumber o) => CustomNumber(value ~/ o.value);
+
+  @override
+  String toString() => '$value';
+}
+// ============================================================
+// 7. Автомобиль с перечислениями
+// ============================================================
+enum CarState { stop, drive, turnLeft, turnRight }
+
+class Car {
+  CarState state = CarState.stop;
+  void setState(CarState newState) {
+    state = newState;
+    print('Автомобиль перешёл в состояние: ${newState.name}');
+  }
+}
+// ============================================================
+// 8. Геометрические фигуры
+// ============================================================
+abstract class Shape {
+  double area();
+}
+
+class Rectangle extends Shape {
+  double w, h;
+  Rectangle(this.w, this.h);
+  @override double area() => w * h;
+}
+
+class Triangle extends Shape {
+  double base, height;
+  Triangle(this.base, this.height);
+  @override double area() => 0.5 * base * height;
+}
+
+class Circle extends Shape {
+  double r;
+  Circle(this.r);
+  @override double area() => 3.14 * r * r;
+}
+// ============================================================
+// 9. Перевод между системами счисления
+// ============================================================
+class NumConverter {
+  static String convert(String number, int fromBase, int toBase) {
+    int decimal = int.parse(number, radix: fromBase);
+    return decimal.toRadixString(toBase);
+  }
+}
+// ============================================================
+// 10. Контейнер фигур с поиском максимальной площади
+// ============================================================
+class ShapeContainer {
+  List<Shape> shapes = [];
+  void add(Shape s) => shapes.add(s);
+
+  Shape? findMaxArea() {
+    if (shapes.isEmpty) return null;
+    return shapes.reduce((a, b) => a.area() > b.area() ? a : b);
+  }
+}
+// ============================================================
+// 11. Стол и столовые приборы
+// ============================================================
+abstract class Tableware {
+  String name;
+  Tableware(this.name);
+}
+
+class Plate extends Tableware { Plate() : super('Тарелка'); }
+class Fork extends Tableware { Fork() : super('Вилка'); }
+class Spoon extends Tableware { Spoon() : super('Ложка'); }
+
+class Table {
+  List<Tableware> items = [];
+  void place(Tableware t) => items.add(t);
+  void remove(Tableware t) => items.remove(t);
+  void show() => print('На столе: ${items.map((e) => e.name).toList()}');
+}
